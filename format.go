@@ -15,13 +15,17 @@ func FormatOutput(m map[string][]*dns.Msg) {
 	sort.Strings(keys)
 
 	for _, key := range keys {
-		for _, msg := range m[key] {
+		msgs := m[key]
+		sort.Slice(msgs, func(i, j int) bool {
+			return msgs[i].Answer[0].Header().Rrtype < msgs[j].Answer[0].Header().Rrtype
+		})
+
+		for _, msg := range msgs {
 			for _, answer := range msg.Answer {
-				// TODO: we also want to sort by RR type
 				fmt.Println(answer.String())
 			}
-		}
 
-		fmt.Println()
+			fmt.Println()
+		}
 	}
 }

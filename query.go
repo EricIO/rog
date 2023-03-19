@@ -42,6 +42,10 @@ func Query(host string, qo QueryOption) ([]*dns.Msg, error) {
 				panic(err)
 			}
 
+			if len(answer.Answer) == 0 {
+				return
+			}
+
 			lock.Lock()
 			answers = append(answers, answer)
 			lock.Unlock()
